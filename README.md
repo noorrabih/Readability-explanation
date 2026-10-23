@@ -123,7 +123,6 @@ minimal match (at least one shared code) and exact match, as macro (mean over se
 - The gold level selects the feature set: levels 1–11 use the morphological/syntactic features
   (`RELEVANT_COLUMNS_11`); levels 12–19 use `RELEVANT_COLUMNS_19`.
 
-To change the rules, edit `resources/feature_levels.csv` or the column lists in `rules.py`.
 
 ## Acknowledgements
 
