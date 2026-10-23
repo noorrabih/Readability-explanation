@@ -556,12 +556,15 @@ def extract_features_from_row(row):
         This includes both sentence-level and aggregated word-level features.
     """
 
-    sentence = row['Sentence']
+    raw_sentence = row['Sentence']
+    sentence = raw_sentence
     # Perform sentence-level analysis
     if len(sentence.split(" ")) == 1:
         sentence = '"' + sentence + '"'
     sentence_analysis = disambiguate_sentence(sentence)
     sentence_features = analyze_sentence(sentence_analysis, sentence)
+    # Count tokens on the original sentence, not the quote-wrapped one
+    sentence_features['single_word'] = len(simple_word_tokenize(raw_sentence)) == 1
 
     # Extract word-level features and aggregate
     word_features_list = []
@@ -620,12 +623,15 @@ def extract_features_from_sentence(sentence):
             features (dict): A dictionary containing extracted features.
             pairs (list): A list of tuples containing lemma and pos pairs. (required for further feature extraction)
     """
+    raw_sentence = sentence
     # Perform sentence-level analysis
     if len(sentence.split(" ")) == 1:
         sentence = '"' + sentence + '"'
     sentence_analysis = disambiguate_sentence(sentence)
     # from each sentence_analysis, extract lemma and pos pairs
     sentence_features = analyze_sentence(sentence_analysis, sentence)
+    # Count tokens on the original sentence, not the quote-wrapped one
+    sentence_features['single_word'] = len(simple_word_tokenize(raw_sentence)) == 1
 
     # Extract word-level features and aggregate
     word_features_list = []

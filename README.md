@@ -94,16 +94,24 @@ python scripts/predict.py --features outputs/dev/full_features.csv --out outputs
 Both modes add `Codes` (grouped into Orthography / word count / Morphology / syntactic / vocab /
 content) and `Arabic_Descriptions`, plus one column per code category.
 
-**3. Evaluate reasons against human annotations.** The gold reasoning annotations are available at
-[Noorrabie/test](https://huggingface.co/datasets/Noorrabie/test) on the Hugging Face Hub.
-The gold CSV needs `ID` and the six category
-columns (`Orthography`, `word count`, `Morphology`, `syntactic`, `vocab`, `content`) with
-comma-separated reasoning codes, the same format `predict.py` writes:
+**3. Evaluate reasons against human annotations.** The gold reasoning annotations are the BAREC-X
+dataset, [Noorrabie/test](https://huggingface.co/datasets/Noorrabie/test) on the Hugging Face Hub.
+`evaluate.py` reads its parquet files directly, as well as CSVs in the format `predict.py` writes
+(`ID` plus the six category columns with comma-separated codes).
+
+To reproduce the BAREC-X rule-based results, build the input from the dataset, then run steps 1–3:
 
 ```bash
-python scripts/evaluate.py --gold annotations.csv --pred outputs/dev/label_reasons.csv --criteria RC --out outputs/dev/eval_RC.csv
-python scripts/evaluate.py --gold annotations.csv --pred outputs/dev/label_reasons.csv --criteria C  --out outputs/dev/eval_C.csv
+huggingface-cli download Noorrabie/test --repo-type dataset --local-dir data/barecx
+python -c "import pandas as pd; pd.read_parquet('data/barecx/annotations.parquet').rename(columns={'id': 'ID', 'sentence': 'Sentence', 'readability_level': 'Readability_Level_19'})[['ID', 'Sentence', 'Readability_Level_19']].to_csv('data/barecx/input.csv', index=False)"
+
+python scripts/extract_features.py --input data/barecx/input.csv --out-dir outputs/barecx
+python scripts/predict.py --features outputs/barecx/full_features.csv --out outputs/barecx/label_reasons.csv --mode explain
+python scripts/evaluate.py --gold data/barecx/annotations.parquet --pred outputs/barecx/label_reasons.csv --criteria RC --out outputs/barecx/eval_RC.csv
+python scripts/evaluate.py --gold data/barecx/annotations.parquet --pred outputs/barecx/label_reasons.csv --criteria C  --out outputs/barecx/eval_C.csv
 ```
+
+This reproduces `rule_based.parquet` exactly (micro F1: 0.666 RC, 0.780 C).
 
 | Criteria | What is compared |
 |---|---|

@@ -1,9 +1,12 @@
 """
 Evaluate system reasoning codes against human reasoning annotations.
 
-Both CSVs need an 'ID' column and one column per category (Orthography, word count,
-Morphology, syntactic, vocab, content) holding comma-separated reasoning codes,
-e.g. "S10-2, S10-3". This is the format written by scripts/predict.py.
+Each input is either
+  - a CSV with an 'ID' column and one column per category (Orthography, word count,
+    Morphology, syntactic, vocab, content) holding comma-separated reasoning codes,
+    e.g. "S10-2, S10-3" (the format written by scripts/predict.py), or
+  - a BAREC-X parquet file (https://huggingface.co/datasets/Noorrabie/test), e.g.
+    annotations.parquet, with 'id' and list columns spelling ... content.
 
 Two granularities:
   RC  compare the reasoning codes themselves (e.g. S10-2 vs S10-3)
@@ -27,6 +30,21 @@ CATEGORIES = ['Orthography', 'word count', 'Morphology', 'syntactic', 'vocab', '
 CATEGORY_LETTERS = {'Orthography': 'O', 'word count': 'W', 'Morphology': 'M',
                     'syntactic': 'S', 'vocab': 'V', 'content': 'C'}
 ALL = 'all_combined'
+# BAREC-X dataset column -> category column used here
+BARECX_COLUMNS = {'id': 'ID', 'sentence': 'Sentence', 'spelling': 'Orthography',
+                  'word_count': 'word count', 'morphology': 'Morphology', 'syntax': 'syntactic',
+                  'vocabulary': 'vocab', 'content': 'content'}
+
+
+def load_table(path) -> pd.DataFrame:
+    """Read a predict.py-style CSV, or a BAREC-X parquet file converted to the same format."""
+    df = pd.read_parquet(path) if str(path).endswith('.parquet') else pd.read_csv(path)
+    if 'id' in df.columns and 'ID' not in df.columns:
+        df = df.rename(columns=BARECX_COLUMNS)
+        df['ID'] = df['ID'].astype('int64')
+        for cat in CATEGORIES:
+            df[cat] = df[cat].apply(lambda codes: ", ".join(codes))
+    return df
 
 
 def parse_codes(cell) -> set:
@@ -138,13 +156,13 @@ def summary_table(summaries: dict) -> pd.DataFrame:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--gold', required=True, help='Human annotations CSV')
-    parser.add_argument('--pred', required=True, help='System CSV (from scripts/predict.py)')
+    parser.add_argument('--gold', required=True, help='Human annotations (CSV or BAREC-X parquet)')
+    parser.add_argument('--pred', required=True, help='System output (CSV from scripts/predict.py, or BAREC-X parquet)')
     parser.add_argument('--criteria', choices=['RC', 'C'], default='RC')
     parser.add_argument('--out', required=True, help='Per-sentence scores CSV; a *_summary.csv is written next to it')
     args = parser.parse_args()
 
-    df, summaries = evaluate(pd.read_csv(args.gold), pd.read_csv(args.pred), args.criteria)
+    df, summaries = evaluate(load_table(args.gold), load_table(args.pred), args.criteria)
     summary = summary_table(summaries)
 
     out = Path(args.out)

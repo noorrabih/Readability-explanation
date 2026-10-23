@@ -74,8 +74,15 @@ feature_code = _load_column_map(FEATURE_LEVELS_CSV, 'Code')
 feature_desc = _load_column_map(FEATURE_LEVELS_CSV, 'Arabic Description')
 
 
-def map_features_to_code(features: List[str], feature_code_map: Dict[str, str] = feature_code) -> List[str]:
-    return [feature_code_map.get(feat) for feat in features]
+def map_features_to_code(features: List[str], level: int,
+                         feature_code_map: Dict[str, str] = feature_code) -> List[str]:
+    """Codes for `features` at `level`. Range features (syllables, word count) have
+    level-specific codes, written as templates like 'W{level}-1' in feature_levels.csv."""
+    codes = []
+    for feat in features:
+        code = feature_code_map.get(feat)
+        codes.append(code.format(level=level) if isinstance(code, str) else code)
+    return codes
 
 
 def get_arabic_descriptions(reasons: List[str], desc_map: Dict[str, str] = feature_desc) -> List[str]:
@@ -191,7 +198,7 @@ def predict_final_level_and_reasons(instance: Dict[str, Any], label: int) -> Tup
         reasons = [feat for feat in RELEVANT_COLUMNS_19
                    if feat != 'exception' and feature_barec.get(feat) == label]
 
-    codes = group_codes_by_category(map_features_to_code(reasons))
+    codes = group_codes_by_category(map_features_to_code(reasons, pred))
     return pred, reasons, codes, source
 
 
@@ -215,5 +222,5 @@ def reasons_for_level(level: int, instance: Dict[str, Any]) -> List[str]:
 
 def reasons_and_codes_for_level(level: int, instance: Dict[str, Any]) -> Tuple[List[str], Dict]:
     feats = reasons_for_level(level, instance)
-    codes = group_codes_by_category([c for c in map_features_to_code(feats) if c])
+    codes = group_codes_by_category([c for c in map_features_to_code(feats, level) if c])
     return feats, codes

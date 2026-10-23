@@ -9,5 +9,6 @@ venv/
 resources/parser_models/
 resources/*.db
 outputs/
+data/
 third_party/
 logs.txt

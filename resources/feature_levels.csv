@@ -1,8 +1,8 @@
 Feature,Arabic Description,Code,BAREC Level
-syllables,عدد المقاطع,O,
+syllables,عدد المقاطع,O{level}-1,
 madd_alif,كلمات تستخدم مد الألف (مثل آكل، آسف),O4-1,4.0
-weak_final,أفعال/أسماء معتلة الآخر,O7-1,7.0
-unique_words,عدد الكلمات,WC,
+weak_final,أفعال/أسماء معتلة الآخر,O7-2,7.0
+unique_words,عدد الكلمات,W{level}-1,
 imperfective_singular,مفرد مضارع (مذكر/مؤنث) (متكلم/مخاطب/غائب),M1-1,1.0
 prc_Al_det,سوابق: ال التعريف,M3-1,3.0
 prc_waw,سوابق: واو العطف,M3-2,3.0
