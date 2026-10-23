@@ -20,7 +20,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.rules import (  # noqa: E402
+from feature_extraction.rules import (  # noqa: E402
     CATEGORY_NAMES, get_arabic_descriptions, predict_final_level_and_reasons,
     reasons_and_codes_for_level)
 

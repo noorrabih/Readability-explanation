@@ -17,9 +17,9 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.disambig_features import extract_disambig_feats  # noqa: E402
-from src.parser_features import process_conllx_directory  # noqa: E402
-from src.tree_parsing import batch_data, parse_data  # noqa: E402
+from feature_extraction.disambig_features import extract_disambig_feats  # noqa: E402
+from feature_extraction.parser_features import process_conllx_directory  # noqa: E402
+from feature_extraction.tree_parsing import batch_data, parse_data  # noqa: E402
 
 BAREC_DATASET = "hf://datasets/CAMeL-Lab/BAREC-Corpus-v1.0/"
 BAREC_SPLITS = {

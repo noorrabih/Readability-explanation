@@ -17,10 +17,10 @@ import pandas as pd
 from camel_tools.utils.charmap import CharMapper
 
 from .config import CLITIC_FEATS_CSV, PARSER_MODEL_DIR, PARSER_MODEL_NAME
-from camel_parser.src.classes import TextParams
-from camel_parser.src.conll_output import text_tuples_to_string
-from camel_parser.src.data_preparation import get_tagset, parse_text
-from camel_parser.src.initialize_disambiguator.disambiguator_interface import get_disambiguator
+from src.classes import TextParams
+from src.conll_output import text_tuples_to_string
+from src.data_preparation import get_tagset, parse_text
+from src.initialize_disambiguator.disambiguator_interface import get_disambiguator
 
 arclean = CharMapper.builtin_mapper("arclean")
 

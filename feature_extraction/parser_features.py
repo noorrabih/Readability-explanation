@@ -15,9 +15,9 @@ from typing import List
 import pandas as pd
 
 from .tree_parsing import arclean, get_parser_components
-from camel_parser.src.classes import TextParams
-from camel_parser.src.conll_output import text_tuples_to_string
-from camel_parser.src.data_preparation import parse_text
+from src.classes import TextParams
+from src.conll_output import text_tuples_to_string
+from src.data_preparation import parse_text
 from conllx_df.conllx_df import ConllxDf
 from conllx_df.conll_utils import get_token_details, add_parent_details, add_direction
 

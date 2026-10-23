@@ -15,17 +15,10 @@ The system is training-free. It analyses the sentence with
 [CAMeL Parser](https://github.com/CAMeL-Lab/camel_parser) (dependency syntax), and returns the
 linguistic features found in the sentence whose guideline level matches the given level.
 
-Example: for `عالم غريب المعالم` at level 11, it returns
-
-```
-ID,Label,Reasons,Codes,Arabic_Descriptions
-10600010006,11,"[""idafa_lafzia""]","{""syntactic"": [""S11-2""]}","[""إضافة خيالية (لفظية) طويل القامة""]"
-```
-
 ## Repository layout
 
 ```
-src/
+feature_extraction/
   disambig_features.py   morphological / orthographic features (CAMeL Tools + CAMeLBERT disambiguation)
   tree_parsing.py        batching + dependency parsing to CoNLL-X (CAMeL Parser, CATiB)
   parser_features.py     syntactic features from the parse trees
@@ -49,10 +42,8 @@ Tested with Python 3.9.
 pip install -r requirements.txt
 
 # CAMeL Parser, pinned to the commit used in our experiments (later versions parse differently).
-# The sed line makes one absolute import relative so it can be imported from this repo.
 git clone https://github.com/CAMeL-Lab/camel_parser third_party/camel_parser
 git -C third_party/camel_parser checkout be07811eeabf3e11cefbe440922d8eab6ba573d0
-sed -i 's/^from src.utils.conll_fixes/from .utils.conll_fixes/' third_party/camel_parser/src/data_preparation.py
 
 # CAMeL Tools data: the MSA BERT disambiguator and the calima-msa-s31 morphology DB
 # (calima-msa-s31 requires an LDC license; see the CAMeL Tools documentation)
