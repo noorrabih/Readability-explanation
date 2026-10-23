@@ -9,3 +9,4 @@ numpy==1.26.4
 pyarrow==17.0.0
 fsspec==2025.10.0
 tqdm==4.67.1
+conllx-df @ git+https://github.com/CAMeL-Lab/conllx_df@d204240e8774dfea1fa4032121d0fca1eafb1834

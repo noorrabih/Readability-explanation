@@ -18,8 +18,8 @@ from .tree_parsing import arclean, get_parser_components
 from camel_parser.src.classes import TextParams
 from camel_parser.src.conll_output import text_tuples_to_string
 from camel_parser.src.data_preparation import parse_text
-from conllx_df.src.conllx_df import ConllxDf
-from conllx_df.src.conll_utils import get_token_details, add_parent_details, add_direction
+from conllx_df.conllx_df import ConllxDf
+from conllx_df.conll_utils import get_token_details, add_parent_details, add_direction
 
 
 def preprocess_conllx_text(lines):
@@ -62,10 +62,17 @@ def preprocess_conllx_text(lines):
 kana_set = ["كان", "صار", "أصبح","زال", "ليس", "أمسى", "بات", "ظل", "أضحى", "برح", "فتئ", "دام", "انفك"]
 inna_w_akhawataha = ['إن', 'أن', 'كأن', 'لكن', 'لعل', 'ليت']
 
+
+def get_token_with_lemma(sen_df, tok_id):
+    """conllx_df's token details plus the LEMMA column, which the rules below need."""
+    token = get_token_details(sen_df, tok_id)
+    token.lemma = sen_df.loc[sen_df['ID'] == tok_id, 'LEMMA'].values[0]
+    return token
+
 def extract_features(sentences: List[pd.DataFrame]) -> pd.DataFrame:
     for sen_df in sentences:
         # Step 1: Build auxiliary structures
-        tokens = {int(row["ID"]): get_token_details(sen_df, int(row["ID"])) for _, row in sen_df.iterrows()}
+        tokens = {int(row["ID"]): get_token_with_lemma(sen_df, int(row["ID"])) for _, row in sen_df.iterrows()}
         children_map = {token_id: [] for token_id in tokens}
 
         for token in tokens.values():

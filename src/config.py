@@ -6,7 +6,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 THIRD_PARTY_DIR = REPO_ROOT / "third_party"
 
-# Make the vendored camel_parser / conllx_df importable as top-level packages.
+# Make the camel_parser clone (see README) importable as a top-level package.
 if str(THIRD_PARTY_DIR) not in sys.path:
     sys.path.insert(0, str(THIRD_PARTY_DIR))
 

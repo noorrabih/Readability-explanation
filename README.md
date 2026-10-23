@@ -31,7 +31,6 @@ scripts/
   evaluate.py            reasoning codes vs. human annotations (C / RC)
 resources/
   feature_levels.csv     feature -> BAREC level, reasoning code, Arabic description
-third_party/             vendored camel_parser and conllx_df (see third_party/README.md)
 ```
 
 ## Setup
@@ -39,7 +38,14 @@ third_party/             vendored camel_parser and conllx_df (see third_party/RE
 Tested with Python 3.9.
 
 ```bash
+# Python dependencies (includes conllx_df, pinned to the commit used in our experiments)
 pip install -r requirements.txt
+
+# CAMeL Parser, pinned to the commit used in our experiments (later versions parse differently).
+# The sed line makes one absolute import relative so it can be imported from this repo.
+git clone https://github.com/CAMeL-Lab/camel_parser third_party/camel_parser
+git -C third_party/camel_parser checkout be07811eeabf3e11cefbe440922d8eab6ba573d0
+sed -i 's/^from src.utils.conll_fixes/from .utils.conll_fixes/' third_party/camel_parser/src/data_preparation.py
 
 # CAMeL Tools data: the MSA BERT disambiguator and the calima-msa-s31 morphology DB
 # (calima-msa-s31 requires an LDC license; see the CAMeL Tools documentation)
