@@ -1,4 +1,4 @@
-# Readability-morph
+# Readability-explanation
 
 An interpretable, rule-based system for **Arabic sentence readability** on the 19-level
 [BAREC](https://huggingface.co/datasets/CAMeL-Lab/BAREC-Corpus-v1.0) scale.
