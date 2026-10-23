@@ -2,7 +2,7 @@
 
 This repository contains the scripts for the rule-based explanation system and its evaluation in our
 paper [Benchmarking Fine-Grained Readability Explanations for Arabic](PAPER_LINK). The BAREC-X
-dataset is available on [Hugging Face](https://huggingface.co/datasets/Noorrabie/test).
+dataset is available on [Hugging Face](https://huggingface.co/datasets/CAMeL-Lab/BAREC-X).
 
 Given an Arabic sentence and its readability level on the 19-level
 [BAREC](https://huggingface.co/datasets/CAMeL-Lab/BAREC-Corpus-v1.0) scale, the system returns the
@@ -105,7 +105,7 @@ minimal match (at least one shared code) and exact match, as macro (mean over se
 ## Reproducing the BAREC-X results
 
 ```bash
-huggingface-cli download Noorrabie/test --repo-type dataset --local-dir data/barecx
+huggingface-cli download CAMeL-Lab/BAREC-X --repo-type dataset --local-dir data/barecx
 python -c "import pandas as pd; pd.read_parquet('data/barecx/annotations.parquet').rename(columns={'id': 'ID', 'sentence': 'Sentence', 'readability_level': 'Readability_Level_19'})[['ID', 'Sentence', 'Readability_Level_19']].to_csv('data/barecx/input.csv', index=False)"
 
 python scripts/extract_features.py --input data/barecx/input.csv --out-dir outputs/barecx

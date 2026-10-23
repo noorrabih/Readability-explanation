@@ -5,7 +5,7 @@ Each input is either
   - a CSV with an 'ID' column and one column per category (Orthography, word count,
     Morphology, syntactic, vocab, content) holding comma-separated reasoning codes,
     e.g. "S10-2, S10-3" (the format written by scripts/predict.py), or
-  - a BAREC-X parquet file (https://huggingface.co/datasets/Noorrabie/test), e.g.
+  - a BAREC-X parquet file (https://huggingface.co/datasets/CAMeL-Lab/BAREC-X), e.g.
     annotations.parquet, with 'id' and list columns spelling ... content.
 
 Two granularities:
